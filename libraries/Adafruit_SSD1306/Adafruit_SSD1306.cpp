@@ -16,17 +16,7 @@ BSD license, check license.txt for more information
 All text above, and the splash screen below must be included in any redistribution
 *********************************************************************/
 
-#ifdef __AVR__
-  #include <avr/pgmspace.h>
-#elif defined(ESP8266) || defined(ESP32)
- #include <pgmspace.h>
-#else
- #define pgm_read_byte(addr) (*(const unsigned char *)(addr))
-#endif
-
-#if !defined(__ARM_ARCH) && !defined(ENERGIA) && !defined(ESP8266) && !defined(ESP32) && !defined(__arc__)
- #include <util/delay.h>
-#endif
+#include <avr/pgmspace.h>
 
 #include <stdlib.h>
 
@@ -105,41 +95,28 @@ void Adafruit_SSD1306::begin(uint8_t vccstate, uint8_t i2caddr, bool reset) {
   if (sid != -1){
     pinMode(dc, OUTPUT);
     pinMode(cs, OUTPUT);
-#ifdef HAVE_PORTREG
     csport      = portOutputRegister(digitalPinToPort(cs));
     cspinmask   = digitalPinToBitMask(cs);
     dcport      = portOutputRegister(digitalPinToPort(dc));
     dcpinmask   = digitalPinToBitMask(dc);
-#endif
     if (!hwSPI){
       // set pins for software-SPI
       pinMode(sid, OUTPUT);
       pinMode(sclk, OUTPUT);
-#ifdef HAVE_PORTREG
       clkport     = portOutputRegister(digitalPinToPort(sclk));
       clkpinmask  = digitalPinToBitMask(sclk);
       mosiport    = portOutputRegister(digitalPinToPort(sid));
       mosipinmask = digitalPinToBitMask(sid);
-#endif
       }
     if (hwSPI){
       SPI.begin();
-#ifdef SPI_HAS_TRANSACTION
       SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
-#else
-      SPI.setClockDivider (4);
-#endif
     }
   }
   else
   {
     // I2C Init
     Wire.begin();
-#ifdef __SAM3X8E__
-    // Force 400 KHz I2C, rawr! (Uses pins 20, 21 for SDA, SCL)
-    TWI1->TWI_CWGR = 0;
-    TWI1->TWI_CWGR = ((VARIANT_MCK / (2 * 400000)) - 4) * 0x101;
-#endif
   }
   if ((reset) && (rst >= 0)) {
     // Setup reset pin direction (used by both SPI and I2C)
@@ -214,21 +191,11 @@ void Adafruit_SSD1306::ssd1306_command(uint8_t c) {
   if (sid != -1)
   {
     // SPI
-#ifdef HAVE_PORTREG
     *csport |= cspinmask;
     *dcport &= ~dcpinmask;
     *csport &= ~cspinmask;
-#else
-    digitalWrite(cs, HIGH);
-    digitalWrite(dc, LOW);
-    digitalWrite(cs, LOW);
-#endif
     fastSPIwrite(c);
-#ifdef HAVE_PORTREG
     *csport |= cspinmask;
-#else
-    digitalWrite(cs, HIGH);
-#endif
   }
   else
   {
@@ -350,32 +317,20 @@ void Adafruit_SSD1306::display(void) {
   if (sid != -1)
   {
     // SPI
-#ifdef HAVE_PORTREG
     *csport |= cspinmask;
     *dcport |= dcpinmask;
     *csport &= ~cspinmask;
-#else
-    digitalWrite(cs, HIGH);
-    digitalWrite(dc, HIGH);
-    digitalWrite(cs, LOW);
-#endif
 
     for (uint16_t i=0; i<(SSD1306_LCDWIDTH*SSD1306_LCDHEIGHT/8); i++) {
       fastSPIwrite(buffer[i]);
     }
-#ifdef HAVE_PORTREG
     *csport |= cspinmask;
-#else
-    digitalWrite(cs, HIGH);
-#endif
   }
   else
   {
     // save I2C bitrate
-#ifdef TWBR
     uint8_t twbrbackup = TWBR;
     TWBR = 12; // upgrade to 400KHz!
-#endif
 
     //Serial.println(TWBR, DEC);
     //Serial.println(TWSR & 0x3, DEC);
@@ -384,17 +339,15 @@ void Adafruit_SSD1306::display(void) {
     for (uint16_t i=0; i<(SSD1306_LCDWIDTH*SSD1306_LCDHEIGHT/8); i++) {
       // send a bunch of data in one xmission
       Wire.beginTransmission(_i2caddr);
-      WIRE_WRITE(0x40);
+      Wire.write(0x40);
       for (uint8_t x=0; x<16; x++) {
-        WIRE_WRITE(buffer[i]);
+        Wire.write(buffer[i]);
         i++;
       }
       i--;
       Wire.endTransmission();
     }
-#ifdef TWBR
     TWBR = twbrbackup;
-#endif
   }
 }
 
@@ -410,17 +363,10 @@ inline void Adafruit_SSD1306::fastSPIwrite(uint8_t d) {
     (void)SPI.transfer(d);
   } else {
     for(uint8_t bit = 0x80; bit; bit >>= 1) {
-#ifdef HAVE_PORTREG
       *clkport &= ~clkpinmask;
       if(d & bit) *mosiport |=  mosipinmask;
       else        *mosiport &= ~mosipinmask;
       *clkport |=  clkpinmask;
-#else
-      digitalWrite(sclk, LOW);
-      if(d & bit) digitalWrite(sid, HIGH);
-      else        digitalWrite(sid, LOW);
-      digitalWrite(sclk, HIGH);
-#endif
     }
   }
 }

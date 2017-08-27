@@ -4,9 +4,7 @@ Adafruit_SSD1306 display;
 
 void setup() {
   display.begin();
-  //display.clearDisplay();
 
-  // text display tests
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);

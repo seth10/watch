@@ -18,32 +18,10 @@ All text above, and the splash screen must be included in any redistribution
 #ifndef _Adafruit_SSD1306_H_
 #define _Adafruit_SSD1306_H_
 
-#if ARDUINO >= 100
- #include "Arduino.h"
- #define WIRE_WRITE Wire.write
-#else
- #include "WProgram.h"
-  #define WIRE_WRITE Wire.send
-#endif
+#include "Arduino.h"
 
-#if defined(__SAM3X8E__)
- typedef volatile RwReg PortReg;
- typedef uint32_t PortMask;
- #define HAVE_PORTREG
-#elif defined(ARDUINO_ARCH_SAMD)
-// not supported
-#elif defined(ESP8266) || defined(ESP32) || defined(ARDUINO_STM32_FEATHER) || defined(__arc__)
-  typedef volatile uint32_t PortReg;
-  typedef uint32_t PortMask;
-#elif defined(__AVR__)
-  typedef volatile uint8_t PortReg;
-  typedef uint8_t PortMask;
-  #define HAVE_PORTREG
-#else
-  // chances are its 32 bit so assume that
-  typedef volatile uint32_t PortReg;
-  typedef uint32_t PortMask;
-#endif
+typedef volatile uint8_t PortReg;
+typedef uint8_t PortMask;
 
 #include <SPI.h>
 #include <Adafruit_GFX.h>
@@ -139,10 +117,8 @@ class Adafruit_SSD1306 : public Adafruit_GFX {
   void fastSPIwrite(uint8_t c);
 
   boolean hwSPI;
-#ifdef HAVE_PORTREG
   PortReg *mosiport, *clkport, *csport, *dcport;
   PortMask mosipinmask, clkpinmask, cspinmask, dcpinmask;
-#endif
 
   inline void drawFastVLineInternal(int16_t x, int16_t y, int16_t h, uint16_t color) __attribute__((always_inline));
   inline void drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color) __attribute__((always_inline));
