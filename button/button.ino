@@ -1,11 +1,17 @@
+volatile int n = 0;
+
+void isr() {
+  Serial.println(millis());
+  n++;
+}
+
 void setup() {
-  pinMode(4, INPUT_PULLUP);
-  pinMode(13, OUTPUT);
+  Serial.begin(9600);
+  pinMode(7, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(7), isr, FALLING);
 }
 
 void loop() {
-  if (digitalRead(4))
-    digitalWrite(13, LOW);
-  else
-    digitalWrite(13, HIGH);
+  Serial.println(n);
+  delay(200);
 }
