@@ -6,6 +6,7 @@ Adafruit_SSD1306 display;
 volatile byte seconds = 0,
               minutes = 30,
               hours = 9;
+volatile boolean showColonDelimiter = true;
 
 volatile unsigned long lastISR = 0;
 volatile unsigned long delta;
@@ -41,6 +42,7 @@ void incrementSeconds() {
       }
     }
   }
+  showColonDelimiter = !showColonDelimiter;
 }
 
 void setup() {
@@ -63,7 +65,10 @@ void loop() {
   byte printHours = ((hours+11)%12)+1;
   if (printHours < 10 ) display.print(' ');
   display.print(printHours);
-  display.print(':');
+  if (showColonDelimiter)
+    display.print(':');
+  else
+    display.print(' ');
   if (minutes < 10) display.print('0');
   display.print(minutes);
   //display.setCursor(128-(12*2), 64-14);
