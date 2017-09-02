@@ -1,7 +1,6 @@
 volatile int n = 0;
 
 void isr() {
-  Serial.println(millis());
   n++;
 }
 
@@ -12,6 +11,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(n);
+  Serial.print('\r');
+  Serial.print(n);
   delay(200);
 }
