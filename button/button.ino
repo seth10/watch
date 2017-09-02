@@ -34,6 +34,8 @@ void loop() {
   Serial.print('\r');
   Serial.print(hours);
   Serial.print(':');
+  if (minutes < 10) Serial.print('0');
   Serial.print(minutes);
+  if (hours < 10) Serial.print(' ');
   delay(50);
 }
