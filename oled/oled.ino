@@ -29,17 +29,24 @@ void setup() {
   pinMode(7, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(7), isr, FALLING);
   display.begin();
-  display.setTextSize(4);
   display.setTextColor(WHITE);
 }
 
 void loop() {
   display.clearDisplay();
-  display.setCursor(0, (64-(7*4))/2);
-  if (hours < 10) display.print(' ');
-  display.print(hours);
+  display.setCursor(0, 14);
+  display.setTextSize(4);
+  if ((hours%12) < 10 && (hours%12) > 0) display.print(' ');
+  display.print(((hours+11)%12)+1);
   display.print(':');
   if (minutes < 10) display.print('0');
   display.print(minutes);
+  //display.setCursor(128-(12*2), 64-14);
+  display.setCursor(104, 50);
+  display.setTextSize(2);
+  if (hours < 12)
+    display.print("AM");
+  else
+    display.print("PM");
   display.display();
 }
