@@ -2,9 +2,13 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
+unsigned long interrupt = millis();
+boolean state = false;
+
 void loop() {
-  digitalWrite(LED_BUILTIN, HIGH);
-  delay(1000);
-  digitalWrite(LED_BUILTIN, LOW);
-  delay(1000);
+  if (millis() > interrupt) {
+    interrupt = millis() + 500;
+    state = !state;
+    digitalWrite(LED_BUILTIN, state);
+  }
 }
