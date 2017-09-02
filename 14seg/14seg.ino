@@ -1,10 +1,27 @@
 #include "Adafruit_LEDBackpack.h"
 Adafruit_AlphaNum4 alpha4;
 
-volatile byte minutes = 30, hours = 9;
+volatile byte seconds = 0,
+              minutes = 30,
+              hours = 9;
 
-unsigned long nextHalfMinuteUpdate = millis()+30*1000;
-boolean halfMinute = false;
+unsigned long nextSecond = millis()+1000;
+
+void incrementSeconds() {
+  seconds++;
+  if (seconds == 60) {
+    seconds = 0;
+    minutes++;
+    if (minutes == 60) {
+      minutes = 0;
+      hours++;
+      if (hours == 24) {
+        hours = 0;
+      }
+    }
+  }
+  nextSecond = millis()+1000;
+}
 
 void setup() {
   alpha4.begin();
@@ -12,18 +29,7 @@ void setup() {
 }
 
 void loop() {
-  if (millis() > nextHalfMinuteUpdate) {
-    nextHalfMinuteUpdate += 30*1000;
-    halfMinute = !halfMinute;
-    if (!halfMinute) {
-      minutes++;
-      if (minutes == 60) {
-        minutes = 0;
-        hours++;
-        if (hours == 24) hours = 0;
-      }
-    }
-  }
+  if (millis() > nextSecond) incrementSeconds();
 
   if (hours < 10)
     alpha4.writeDigitAscii(0, ' ');
