@@ -1,26 +1,39 @@
-#include <Adafruit_SSD1306.h>
+volatile byte minutes = 0, hours = 0;
 
-Adafruit_SSD1306 display;
-
-volatile int n = 0;
+volatile unsigned long lastISR = 0;
+volatile unsigned long delta;
+volatile byte sequence = 0;
 
 void isr() {
-  n++;
+  delta = millis() - lastISR;
+  lastISR = millis();
+  if (delta < 100) return;
+  if (delta < 1000) {
+    switch (sequence) {
+      case 1: minutes = (minutes+1)  % 60; break;
+      case 2: minutes = (minutes+10) % 60; break;
+      case 3: hours   = (hours+1)    % 24; break;
+      case 4: hours   = (hours+6)    % 24; break;
+    }
+  } else {
+    if      (delta > 7000) sequence = 0;
+    else if (delta > 5000) sequence = 4;
+    else if (delta > 3000) sequence = 3;
+    else if (delta > 2000) sequence = 2;
+    else                sequence = 1;
+  }
 }
 
 void setup() {
   Serial.begin(9600);
   pinMode(7, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(7), isr, FALLING);
-  display.begin();
-  display.setTextSize(8);
-  display.setTextColor(WHITE);
 }
 
 void loop() {
-  display.clearDisplay();
-  display.setCursor((128-(8*5))/2, 0);
-  display.println(n);
-  display.display();
+  Serial.print('\r');
+  Serial.print(hours);
+  Serial.print(':');
+  Serial.print(minutes);
   delay(50);
 }
