@@ -3,7 +3,7 @@ Adafruit_AlphaNum4 alpha4;
 
 volatile byte halfSeconds = 0,
               minutes = 30,
-              hours = 9;
+              hours = 21;
 volatile boolean blinkSeconds = true;
 
 ISR (TIMER1_OVF_vect) {
@@ -35,11 +35,12 @@ void setup() {
 }
 
 void loop() {
-  if (hours < 10)
-    alpha4.writeDigitAscii(0, ' ');
+  byte printHours = ((hours+11)%12)+1;
+  if (printHours < 10)
+    alpha4.writeDigitAscii(0, ' ', hours>=12);
   else
-    alpha4.writeDigitAscii(0, '0'+(hours/10), hours>=12);
-  alpha4.writeDigitAscii(1, '0'+(hours%10), true);
+    alpha4.writeDigitAscii(0, '0'+(printHours/10), hours>=12);
+  alpha4.writeDigitAscii(1, '0'+(printHours%10), true);
   alpha4.writeDigitAscii(2, '0'+(minutes/10));
   alpha4.writeDigitAscii(3, '0'+(minutes%10), blinkSeconds);
   alpha4.writeDisplay();
