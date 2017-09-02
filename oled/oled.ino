@@ -1,13 +1,17 @@
+#include <TimerOne.h>
+
 #include <Adafruit_SSD1306.h>
 Adafruit_SSD1306 display;
 
-volatile byte minutes = 30, hours = 9;
+volatile byte seconds = 0,
+              minutes = 30,
+              hours = 9;
 
 volatile unsigned long lastISR = 0;
 volatile unsigned long delta;
 volatile byte sequence = 0;
 
-void isr() {
+void handleButton() {
   delta = millis() - lastISR;
   lastISR = millis();
   if (delta < 100) return; // debounce
@@ -24,10 +28,30 @@ void isr() {
   }
 }
 
+void incrementSeconds() {
+  seconds++;
+  if (seconds == 60) {
+    seconds = 0;
+    minutes++;
+    if (minutes == 60) {
+      minutes = 0;
+      hours++;
+      if (hours == 24) {
+        hours = 0;
+      }
+    }
+  }
+}
+
 void setup() {
   Serial.begin(9600);
   pinMode(7, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(7), isr, FALLING);
+  attachInterrupt(digitalPinToInterrupt(7), handleButton, FALLING);
+
+  // Timer1 can only handle up to ~8 seconds, not 60, so isntead count seconds
+  Timer1.initialize(1000000);
+  Timer1.attachInterrupt(incrementSeconds);
+
   display.begin();
   display.setTextColor(WHITE);
 }
@@ -36,8 +60,9 @@ void loop() {
   display.clearDisplay();
   display.setCursor(0, 14);
   display.setTextSize(4);
-  if ((hours%12) < 10 && (hours%12) > 0) display.print(' ');
-  display.print(((hours+11)%12)+1);
+  byte printHours = ((hours+11)%12)+1;
+  if (printHours < 10 ) display.print(' ');
+  display.print(printHours);
   display.print(':');
   if (minutes < 10) display.print('0');
   display.print(minutes);
