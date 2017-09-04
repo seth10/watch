@@ -13,12 +13,10 @@ void setup() {
     Wire.endTransmission();
   }
 
-  for (byte quarterPage = 0; quarterPage < 4*8+1; quarterPage++) {
+  for (uint16_t i=0; i<128*8; i++) {
     Wire.beginTransmission(0x3C);
     Wire.write(0x40);
-    for (byte i=0; i<64; i++) {
-      Wire.write(i);
-    }
+    Wire.write(i);
     Wire.endTransmission();
   }
 }
