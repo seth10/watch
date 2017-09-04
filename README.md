@@ -42,3 +42,8 @@ This is a highly minimized version of the ssd1306_128x64_i2c example included wi
 
 #### Footnote 1
 Maybe I could use a [Feather](https://www.adafruit.com/feather) [with an ESP8266](https://www.adafruit.com/product/3404) to make a real "smart" watch. I was actually thinking of getting a [basic Feather](https://www.adafruit.com/product/2771) now and snapping off the proto space. This would take up less space than the Pro Trinket and [LiIon/LiPoly Backpack](https://www.adafruit.com/product/2124), as the Feather [has built-in charging](https://forums.adafruit.com/viewtopic.php?f=52&t=122640#p612296). However, this would be another $20 and I want to make something using what I have, even if it might end up slightly larger.
+
+#### Footnote 2
+Pinouts: [Trinket](https://learn.adafruit.com/introducing-trinket/pinouts#usb-pins) (note pins 4/5 are used for USB programming), [Pro Trinket](https://learn.adafruit.com/introducing-pro-trinket/pinouts), [LiPoly/LiIon Backpack](https://learn.adafruit.com/adafruit-pro-trinket-lipoly-slash-liion-backpack/pinouts).
+![](https://cdn-learn.adafruit.com/assets/assets/000/025/645/original/trinket5.png?1432753823)
+![](https://cdn-learn.adafruit.com/assets/assets/000/025/646/original/adafruit_products_pro5.png?1432753967)
