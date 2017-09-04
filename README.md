@@ -19,7 +19,7 @@ Note that the capacitor seen in the above media is not necessary as there is sof
 
 [![An SSD1306 display showing a pattern akin to the Sierpinski Triangle with a white rectangle filled in the middle](https://user-images.githubusercontent.com/5026621/30033770-4db9cc00-916b-11e7-905f-29efedaccacb.jpg)](https://gist.github.com/seth10/ca02c15ec7c7a890c90d330c6ff3a877)
 The Trinket is unable to use the Adafruit_SSD1306 library (and thereby the Adafruit-GFX-Library) as-is. The OLED display is 128 pixels wide by 64 pixels tall. The Trinket would need 1024 bytes to buffer the display (8192 pixels / 8 bits per byte = 1024 bytes), but the Trinket has only 512 bytes of SRAM. Instead of buffering and writing the entire display, we can write raw data and commands. That is what this example does.
-Currently it sends 32 commands as the initialization sequence (various configurations, see [`Adafruit_SSD1306::begin`](https://github.com/seth10/watch/blob/master/libraries/Adafruit_SSD1306/Adafruit_SSD1306.cpp#L136) for more detail). Then, it fills the screen with a pattern akin to Sierpinski's Triangle. Finally, it demonstrates specifying an area and drawing only to it.
+Currently it sends 32 commands as the initialization sequence (various configurations, see [`Adafruit_SSD1306::begin`](https://github.com/seth10/watch/blob/master/libraries/Adafruit_SSD1306/Adafruit_SSD1306.cpp#L68) for more detail). Then, it fills the screen with a pattern akin to Sierpinski's Triangle. Finally, it demonstrates specifying an area and drawing only to it.
 
 ## Trinket Recovery (trinketloader.ino)
 
