@@ -46,7 +46,6 @@ void incrementSeconds() {
 }
 
 void setup() {
-  Serial.begin(9600);
   pinMode(7, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(7), handleButton, FALLING);
 
@@ -63,7 +62,7 @@ void loop() {
   display.setCursor(0, 14);
   display.setTextSize(4);
   byte printHours = ((hours+11)%12)+1;
-  if (printHours < 10 ) display.print(' ');
+  if (printHours < 10) display.print(' ');
   display.print(printHours);
   if (showColonDelimiter)
     display.print(':');
