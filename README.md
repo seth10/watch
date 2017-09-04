@@ -28,13 +28,13 @@ Currently it sends 32 commands as the initialization sequence (various configura
 When I wanted to try idea 2 of [#4](https://github.com/seth10/watch/issues/4), the Trinket wouldn't enter the bootloader, it would just stay at a solid red light. I ended up finding my old Arduino Mega and using it to [repair the bootloader](https://learn.adafruit.com/introducing-trinket/repairing-bootloader). The [`trinketloader` sketch](https://github.com/seth10/watch/tree/master/trinketloader) is from Adafruit. I modified one line to force it to recognize my Trinket. I was able to recover it after removing the jumper from the Arduino's 5V to the Trinket's VBAT+ and powering the Trinket via microUSB. However, after soldering on breadboard headers and playing with it a bit, it's stuck once again and I can't recover it.
 
 
-# 14-Segment Display Brightness Test (14seg_brightness.ino)
+## 14-Segment Display Brightness Test (14seg_brightness.ino)
 
 [![brightnesstest](https://user-images.githubusercontent.com/5026621/30039880-153ce918-91a5-11e7-87af-88e76f2bf572.gif)](https://www.youtube.com/watch?v=We3GuKf2hUQ)<br>
 By [default](https://github.com/seth10/watch/blob/master/libraries/Adafruit_LED_Backpack/Adafruit_LEDBackpack.cpp#L213), the quad-alphanumeric display is at brightness 15. When I ran my [brightness test](https://github.com/seth10/watch/issues/4#issue-254842419), it lasted 6 hours. Lowering the brightness to 0 made it last 9 hours on a 105mAh battery. Note brightness 15 is, in fact, _very_ bright.
 
 
-# A Simple OLED Test (oled_test_simple.ino)
+## A Simple OLED Test (oled_test_simple.ino)
 
 ![An SSD1306 OLED display running a section of the Adafruit example program](https://user-images.githubusercontent.com/5026621/30039453-0db7c0a6-919f-11e7-9e2b-c3571a3c316c.gif)<br>
 This is a highly minimized version of the ssd1306_128x64_i2c example included with the Adafruit_SSD1306 library. It's basically just the "text display tests" section.
