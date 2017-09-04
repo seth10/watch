@@ -12,7 +12,7 @@ The primary hardware components I have are two [Adafruit Trinket](https://www.ad
 [![An SSD1306 display connected to an Arduino Micro with a button on a mini breadboard. The display shows the time.](https://user-images.githubusercontent.com/5026621/30008988-a28e0300-90f2-11e7-8583-e07cc6abd03b.gif)](https://user-images.githubusercontent.com/5026621/30008983-95251370-90f2-11e7-91b8-bbeabd0d093f.gif)<br>
 This is the primary sketch. While the 14-segment display is nice, it is rather thick. The OLED display is fantastically thin and great for this type of wearable project. It also uses considerably less power.
 The current sketch supports showing the time (obviously), nicely formatted hours (i.e. 12 instead of 0 for midnight/noon), a blinking colon separator (once a second), and an AM/PM display. You can also use a single button with different timed press sequences to set the time. You can find a video of me setting the time [here](https://www.youtube.com/watch?v=HO-wcZnRYFU).
-The timer and interrupt code will need to be adapted for the Trinket. Note that the capacitor seen in the above media is not necessary as there is software debouncing.
+The timer and interrupt code would need to be adapted for the Trinket, but the Pro Trinket's chip (ATmega328) is more similar to that of the Arduino Micro (ATmega32U4), perfect! Note that the capacitor seen in the above media is not necessary as there is software debouncing.
 
 
 ## Raw OLED Control (oled_raw.ino)
@@ -26,6 +26,12 @@ Currently it sends 32 commands as the initialization sequence (various configura
 
 ![A Trinket with an Arduino MEGA connected to reprogram the prior's bootloader](https://user-images.githubusercontent.com/5026621/30007224-bea07ff2-90d7-11e7-9f0a-85935a7f6e46.jpg)
 When I wanted to try idea 2 of [#4](https://github.com/seth10/watch/issues/4), the Trinket wouldn't enter the bootloader, it would just stay at a solid red light. I ended up finding my old Arduino Mega and using it to [repair the bootloader](https://learn.adafruit.com/introducing-trinket/repairing-bootloader). The [`trinketloader` sketch](https://github.com/seth10/watch/tree/master/trinketloader) is from Adafruit. I modified one line to force it to recognize my Trinket. I was able to recover it after removing the jumper from the Arduino's 5V to the Trinket's VBAT+ and powering the Trinket via microUSB. However, after soldering on breadboard headers and playing with it a bit, it's stuck once again and I can't recover it.
+
+
+# 14-Segment Display Brightness Test (14seg_brightness.ino)
+
+[![brightnesstest](https://user-images.githubusercontent.com/5026621/30039880-153ce918-91a5-11e7-87af-88e76f2bf572.gif)](https://www.youtube.com/watch?v=We3GuKf2hUQ)<br>
+By [default](https://github.com/seth10/watch/blob/master/libraries/Adafruit_LED_Backpack/Adafruit_LEDBackpack.cpp#L213), the quad-alphanumeric display is at brightness 15. When I ran my [brightness test](https://github.com/seth10/watch/issues/4#issue-254842419), it lasted 6 hours. Lowering the brightness to 0 made it last 9 hours on a 105mAh battery. Note brightness 15 is, in fact, _very_ bright.
 
 
 # A Simple OLED Test (oled_test_simple.ino)
