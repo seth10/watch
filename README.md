@@ -34,6 +34,16 @@ When I wanted to try idea 2 of [#4](https://github.com/seth10/watch/issues/4), t
 By [default](https://github.com/seth10/watch/blob/master/libraries/Adafruit_LED_Backpack/Adafruit_LEDBackpack.cpp#L213), the quad-alphanumeric display is at brightness 15. When I ran my [brightness test](https://github.com/seth10/watch/issues/4#issue-254842419), it lasted 6 hours. Lowering the brightness to 0 made it last 9 hours on a 105mAh battery. Note brightness 15 is, in fact, _very_ bright.
 
 
+## Standby Test (14seg_standby.ino)
+
+[![An HT16K33 LED controller entering standby mode and being woken by a pushbutton trigger a pin change (falling-edge) interrupt](https://user-images.githubusercontent.com/5026621/30085897-a3fd9d8e-9266-11e7-8833-a1698b0e676d.gif)](https://www.youtube.com/watch?v=lc1ocVeB3as)<br>
+The 14-segment display uses a lot of power. Much more so than the OLED display. To help mitigate this, we can make the HT16K33 LED controller enter standby mode. I still need to run a battery test but this should save a _ton_ of power.
+
+On the Arduino Micro I couldn't wake the LED controller directly from the interrupt service routine. This is because the I2C transaction takes some time. When I did this in the ISR the Arduino locked up (I couldn't upload code to it without manually pressing the reset button). Instead I set the `wakeup` flag to `true`, which should be almost instant, and handle that in the `loop()` method. This _does_ work.
+
+I figured out how to do this from [the datasheet](https://cdn-shop.adafruit.com/datasheets/ht16K33v110.pdf#page=13). The System Setup Register has a single significant bit which "Defines internal system oscillator [state]" where "{0}:Turn off System oscillator (standby mode)" and "{1}:Turn on System oscillator (normal operation mode)." I was able to verify this in the Adafruit LED Backpack library, where [it writes `0x21` to turn on the oscillator](https://github.com/seth10/watch/blob/master/libraries/Adafruit_LED_Backpack/Adafruit_LEDBackpack.cpp#L209). What's interesting here is that both the command and data are in this one byte. The first (most-significant) nibble is 2h (hex), which matches 0010b (binary) as specified in the datasheet. The low nibble is 1h for turning the oscillator on, but sending the data 0h would turn it off.
+
+
 ## A Simple OLED Test (oled_test_simple.ino)
 
 ![An SSD1306 OLED display running a section of the Adafruit example program](https://user-images.githubusercontent.com/5026621/30039453-0db7c0a6-919f-11e7-9e2b-c3571a3c316c.gif)<br>
