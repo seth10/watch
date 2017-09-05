@@ -30,8 +30,19 @@ When I wanted to try idea 2 of [#4](https://github.com/seth10/watch/issues/4), t
 
 ## 14-Segment Display Brightness Test (14seg_brightness.ino)
 
-[![brightnesstest](https://user-images.githubusercontent.com/5026621/30039880-153ce918-91a5-11e7-87af-88e76f2bf572.gif)](https://www.youtube.com/watch?v=We3GuKf2hUQ)<br>
+[![A 14-segment display showing off its 16-step dimming circuit](https://user-images.githubusercontent.com/5026621/30039880-153ce918-91a5-11e7-87af-88e76f2bf572.gif)](https://www.youtube.com/watch?v=We3GuKf2hUQ)<br>
 By [default](https://github.com/seth10/watch/blob/master/libraries/Adafruit_LED_Backpack/Adafruit_LEDBackpack.cpp#L213), the quad-alphanumeric display is at brightness 15. When I ran my [brightness test](https://github.com/seth10/watch/issues/4#issue-254842419), it lasted 6 hours. Lowering the brightness to 0 made it last 9 hours on a 105mAh battery. Note brightness 15 is, in fact, _very_ bright.
+
+
+# 14-Segment Test of Each Segment (14seg_segments.ino)
+
+![A 14-segment display showing each of the 14 individual segments and digit separators](https://user-images.githubusercontent.com/5026621/30087281-c80245ca-926d-11e7-8784-35df6026a98d.gif)<br>
+Simple enough, this sketch shows each of the 14 segments (and digit separators) and their indices. Given the `Adafruit_AlphaNum4::writeDigitAscii` method this knowledge shouldn't be necessary. Note you can turn on the digits separator by appending a boolean argument of `true`, i.e.
+```
+alpha4.writeDigitAscii(1, '3', true);
+alpha4.writeDigitAscii(2, '1');
+alpha4.writeDigitAscii(3, '4');
+```
 
 
 ## Standby Test (14seg_standby.ino)
