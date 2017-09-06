@@ -28,6 +28,12 @@ Currently it sends 32 commands as the initialization sequence (various configura
 When I wanted to try idea 2 of [#4](https://github.com/seth10/watch/issues/4), the Trinket wouldn't enter the bootloader, it would just stay at a solid red light. I ended up finding my old Arduino Mega and using it to [repair the bootloader](https://learn.adafruit.com/introducing-trinket/repairing-bootloader). The [`trinketloader` sketch](https://github.com/seth10/watch/tree/master/trinketloader) is from Adafruit. I modified one line to force it to recognize my Trinket. I was able to recover it after removing the jumper from the Arduino's 5V to the Trinket's VBAT+ and powering the Trinket via microUSB. However, after soldering on breadboard headers and playing with it a bit, it's stuck once again and I can't recover it.
 
 
+## A Simple OLED Test (oled_test_simple.ino)
+
+![An SSD1306 OLED display running a section of the Adafruit example program](https://user-images.githubusercontent.com/5026621/30039453-0db7c0a6-919f-11e7-9e2b-c3571a3c316c.gif)<br>
+This is a highly minimized version of the ssd1306_128x64_i2c example included with the Adafruit_SSD1306 library. It's basically just the "text display tests" section.
+
+
 ## 14-Segment Display Brightness Test (14seg_brightness.ino)
 
 [![A 14-segment display showing off its 16-step dimming circuit](https://user-images.githubusercontent.com/5026621/30039880-153ce918-91a5-11e7-87af-88e76f2bf572.gif)](https://www.youtube.com/watch?v=We3GuKf2hUQ)<br>
@@ -55,10 +61,10 @@ On the Arduino Micro I couldn't wake the LED controller directly from the interr
 I figured out how to do this from [the datasheet](https://cdn-shop.adafruit.com/datasheets/ht16K33v110.pdf#page=13). The System Setup Register has a single significant bit which "Defines internal system oscillator [state]" where "{0}:Turn off System oscillator (standby mode)" and "{1}:Turn on System oscillator (normal operation mode)." I was able to verify this in the Adafruit LED Backpack library, where [it writes `0x21` to turn on the oscillator](https://github.com/seth10/watch/blob/master/libraries/Adafruit_LED_Backpack/Adafruit_LEDBackpack.cpp#L209). What's interesting here is that both the command and data are in this one byte. The first (most-significant) nibble is 2h (hex), which matches 0010b (binary) as specified in the datasheet. The low nibble is 1h for turning the oscillator on, but sending the data 0h would turn it off.
 
 
-## A Simple OLED Test (oled_test_simple.ino)
+## Trinket Timer Test (trinket_timer.ino)
 
-![An SSD1306 OLED display running a section of the Adafruit example program](https://user-images.githubusercontent.com/5026621/30039453-0db7c0a6-919f-11e7-9e2b-c3571a3c316c.gif)<br>
-This is a highly minimized version of the ssd1306_128x64_i2c example included with the Adafruit_SSD1306 library. It's basically just the "text display tests" section.
+![An Adafruit Trinket microcontroller blinking its built-in LED at two hertz](https://user-images.githubusercontent.com/5026621/30088755-4910717a-9276-11e7-9a77-8c60baadc64a.gif)
+This sketch turns the built-in LED on for half a second, then off for half a second. It uses the hardware timer. Although it's not even a dozen significant lines of code, it's a minimal complete example.
 
 
 #### Footnote 1
