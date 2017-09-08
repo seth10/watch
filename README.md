@@ -9,7 +9,7 @@ The primary hardware components I have are two [Adafruit Trinket](https://www.ad
 
 ## OLED Watch (oled.ino)
 
-[![An SSD1306 display connected to an Arduino Micro with a button on a mini breadboard. The display shows the time.](https://user-images.githubusercontent.com/5026621/30008988-a28e0300-90f2-11e7-8583-e07cc6abd03b.gif)](https://user-images.githubusercontent.com/5026621/30008983-95251370-90f2-11e7-91b8-bbeabd0d093f.gif)<br>
+[![An SSD1306 display connected to an Arduino Micro with a button on a mini breadboard. The display shows the time.](https://user-images.githubusercontent.com/5026621/30225234-b481d25c-949f-11e7-8eb5-cba1e0080de6.gif)](https://user-images.githubusercontent.com/5026621/30225277-ecf068f6-949f-11e7-8711-a96d4bbf0ddd.gif)
 This is the primary sketch. While the 14-segment display is nice, it is rather thick. The OLED display is fantastically thin and great for this type of wearable project. It also uses considerably less power.
 The current sketch supports showing the time (obviously), nicely formatted hours (i.e. 12 instead of 0 for midnight/noon), a blinking colon separator (once a second), and an AM/PM display. You can also use a single button with different timed press sequences to set the time. You can find a video of me setting the time [here](https://www.youtube.com/watch?v=HO-wcZnRYFU).
 The timer and interrupt code would need to be adapted for the Trinket, but the Pro Trinket's chip (ATmega328) is more similar to that of the Arduino Micro (ATmega32U4), perfect! Note that the capacitor seen in the above media is not necessary as there is software debouncing.
