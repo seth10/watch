@@ -53,7 +53,7 @@ alpha4.writeDigitAscii(3, '4');
 
 ## Standby Test (14seg_standby.ino)
 
-[![An HT16K33 LED controller entering standby mode and being woken by a pushbutton trigger a pin change (falling-edge) interrupt](https://user-images.githubusercontent.com/5026621/30085897-a3fd9d8e-9266-11e7-8833-a1698b0e676d.gif)](https://www.youtube.com/watch?v=lc1ocVeB3as)<br>
+[<img alt="An HT16K33 LED controller entering standby mode and being woken by a pushbutton trigger a pin change (falling-edge) interrupt" src="https://user-images.githubusercontent.com/5026621/30085897-a3fd9d8e-9266-11e7-8833-a1698b0e676d.gif" width="100%">](https://www.youtube.com/watch?v=lc1ocVeB3as)<br>
 The 14-segment display uses a lot of power. Much more so than the OLED display. To help mitigate this, we can make the HT16K33 LED controller enter standby mode. I still need to run a battery test but this should save a _ton_ of power.
 
 On the Arduino Micro I couldn't wake the LED controller directly from the interrupt service routine. This is because the I2C transaction takes some time. When I did this in the ISR the Arduino locked up (I couldn't upload code to it without manually pressing the reset button). Instead I set the `wakeup` flag to `true`, which should be almost instant, and handle that in the `loop()` method. This _does_ work.
