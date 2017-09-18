@@ -71,7 +71,7 @@ void loop() {
   if (minutes < 10) display.print('0');
   display.print(minutes);
   //display.setCursor(128-(12*2), 64-14);
-  display.setCursor(104, 50);
+  display.setCursor(100, 50);
   display.setTextSize(2);
   if (hours < 12)
     display.print("AM");
